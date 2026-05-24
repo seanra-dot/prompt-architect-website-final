@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Prompt Architect AI</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+
+      font-family: 'Pretendard', sans-serif;
+
+      background:
+      radial-gradient(circle at top,
+      #1f2937,
+      #0f172a 45%,
+      #020617 100%);
+
+      color: white;
+
+      min-height: 100vh;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      padding: 30px;
+    }
+
+    .container {
+
+      width: 100%;
+      max-width: 900px;
+
+      background: rgba(255,255,255,0.05);
+
+      border: 1px solid rgba(255,255,255,0.08);
+
+      backdrop-filter: blur(20px);
+
+      border-radius: 28px;
+
+      padding: 40px;
+
+      box-shadow:
+      0 20px 80px rgba(0,0,0,0.45);
+    }
+
+    .badge {
+
+      display: inline-block;
+
+      padding: 8px 14px;
+
+      border-radius: 999px;
+
+      background: rgba(99,102,241,0.18);
+
+      color: #a5b4fc;
+
+      font-size: 14px;
+
+      margin-bottom: 20px;
+    }
+
+    h1 {
+
+      font-size: 52px;
+
+      line-height: 1.1;
+
+      margin-bottom: 16px;
+
+      font-weight: 700;
+    }
+
+    .subtitle {
+
+      color: #94a3b8;
+
+      font-size: 18px;
+
+      line-height: 1.7;
+
+      margin-bottom: 35px;
+    }
+
+    textarea {
+
+      width: 100%;
+
+      min-height: 220px;
+
+      border: none;
+
+      outline: none;
+
+      resize: vertical;
+
+      border-radius: 20px;
+
+      background: rgba(255,255,255,0.06);
+
+      color: white;
+
+      padding: 24px;
+
+      font-size: 16px;
+
+      line-height: 1.7;
+
+      margin-bottom: 24px;
+
+      border: 1px solid rgba(255,255,255,0.08);
+
+      transition: 0.25s;
+    }
+
+    textarea:focus {
+
+      border-color: #818cf8;
+
+      box-shadow:
+      0 0 0 4px rgba(99,102,241,0.15);
+    }
+
+    textarea::placeholder {
+      color: #64748b;
+    }
+
+    button {
+
+      border: none;
+
+      background:
+      linear-gradient(
+      135deg,
+      #6366f1,
+      #8b5cf6);
+
+      color: white;
+
+      padding: 18px 30px;
+
+      font-size: 17px;
+
+      border-radius: 16px;
+
+      cursor: pointer;
+
+      font-weight: 600;
+
+      transition: 0.25s;
+
+      width: 100%;
+    }
+
+    button:hover {
+
+      transform: translateY(-2px);
+
+      box-shadow:
+      0 10px 35px rgba(99,102,241,0.35);
+    }
+
+    .result-box {
+
+      margin-top: 30px;
+
+      background: rgba(255,255,255,0.05);
+
+      border-radius: 24px;
+
+      padding: 28px;
+
+      border: 1px solid rgba(255,255,255,0.08);
+
+      white-space: pre-wrap;
+
+      line-height: 1.8;
+
+      color: #e2e8f0;
+
+      min-height: 120px;
+    }
+
+    .loading {
+
+      color: #a5b4fc;
+    }
+
+    .footer {
+
+      margin-top: 25px;
+
+      text-align: center;
+
+      color: #64748b;
+
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+
+      .container {
+
+        padding: 25px;
+      }
+
+      h1 {
+
+        font-size: 38px;
+      }
+
+      .subtitle {
+
+        font-size: 16px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="badge">
+      AI Prompt Engineering Suite
+    </div>
+
+    <h1>
+      Prompt Architect AI
+    </h1>
+
+    <p class="subtitle">
+      사용자의 프롬프트를 분석하고,
+      더 전문적이고 시네마틱한 형태로
+      자동 개선합니다.
+    </p>
+
+    <textarea
+      id="prompt"
+      placeholder="예시: 극사실주의 스타일로 1980년대 일본 도쿄 골목을 배경으로 한 시네마틱 사진">
+    </textarea>
+
+    <button onclick="enhancePrompt()">
+      프롬프트 개선하기
+    </button>
+
+    <div
+      class="result-box"
+      id="result">
+
+      AI가 프롬프트를 분석중입니다.
+    </div>
+
+    <div class="footer">
+      Powered by Gemini AI
+    </div>
+
+  </div>
+
+  <script>
+
+    async function enhancePrompt() {
+
+      const prompt =
+        document.getElementById("prompt").value;
+
+      const resultDiv =
+        document.getElementById("result");
+
+      resultDiv.innerHTML =
+        '<span class="loading">AI 분석중...</span>';
+
+      try {
+
+        const response =
+          await fetch("/enhance", {
+
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+              prompt
+            })
+          });
+
+        const data =
+          await response.json();
+
+        resultDiv.innerText =
+          data.result || data.error;
+
+      } catch (error) {
+
+        resultDiv.innerText =
+          "오류 발생";
+      }
+    }
+
+  </script>
+
+</body>
+</html>
