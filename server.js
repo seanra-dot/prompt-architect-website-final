@@ -89,13 +89,13 @@ ${prompt}
 
     } catch (error) {
 
-        console.error(error);
+        console.error("에러 상세:", error);
 
         res.status(500).json({
-            error: error.message
+            error: error.message,
+            detail: String(error)
         });
     }
-});
 
 const PORT =
     process.env.PORT || 3000;
